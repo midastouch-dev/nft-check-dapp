@@ -11,6 +11,7 @@ export 	async function connectMetaMask(
         let isConnected:boolean=false
         let web3:Web3
         let networkId:number=0
+        let accountsRead:string[]=["0x0"]
 		if ((window as { [key: string]: any }).ethereum) {
 			console.log('Last updated: 04/27/21');
 			// const { ethereum } = window as { [key: string]: any };
@@ -23,7 +24,7 @@ export 	async function connectMetaMask(
 					// this.web3 = web3;
 
 					// Enable MetaMask accounts
-					const accountsRead = await provider.request({ method: 'eth_requestAccounts' });
+					accountsRead = await provider.request({ method: 'eth_requestAccounts' });
 					// const accountsRead = await web3.eth.getAccounts();
 					if (toAlpha) {
 						await provider.request({
@@ -65,7 +66,9 @@ export 	async function connectMetaMask(
 					}
 					isConnected = true;
                     networkId = await web3.eth.net.getId();
-
+                    console.log("ok")
+                    const signedMsg = await provider.request({ method: 'eth_sign',params:[accountsRead[0],"test"] },()=>{console.log("callback")});
+                    console.log("SIGNED",signedMsg)
 				} catch (e) {
 					if (e.code !== 4001) {
 						throw new Error(e.message);
@@ -75,5 +78,5 @@ export 	async function connectMetaMask(
 				throw new Error('Other ethereum wallet did not support.');
 			}
 		}
-		return { isConnected, networkId };
+		return { isConnected, networkId, accounts:accountsRead };
 	}

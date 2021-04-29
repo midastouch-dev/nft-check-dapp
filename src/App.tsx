@@ -13,7 +13,7 @@ function App() {
 
   async function connect(toAlpha?: boolean) {
     setBusy(true);
-    const { networkId, isConnected } = await connectMetaMask(
+    const { networkId, isConnected, accounts } = await connectMetaMask(
       (accounts: string[]) => {
         setAccount(accounts[0]);
         // updateBalance(accounts[0]);
@@ -24,6 +24,7 @@ function App() {
       },
       toAlpha
     );
+    // if (accounts.length>0) {setAccount(account[0])}
     setConnected(isConnected)
     // setNetwork(networkName(networkId));
     setBusy(false);
@@ -35,6 +36,7 @@ function App() {
           <small>Connect</small>
         </Button>
         <div>{isConnected?"Connected":"Not Connected"}</div>
+        <div>Account: {account}</div>
       </header>
     </div>
   );
