@@ -72,7 +72,7 @@ export async function connectMetaMask(
 				isConnected = true;
 				networkId = await web3.eth.net.getId();
 				console.log("ok")
-				const msgHashHex = ethUtil.bufferToHex(ethUtil.keccak(Buffer.from(testMsg)))
+				const msgHashHex =ethUtil.bufferToHex(Buffer.from(testMsg)) //ethUtil.bufferToHex(ethUtil.keccak(Buffer.from(testMsg)))
 				const signedMsg = await provider.request({ method: 'eth_sign', params: [accountsRead[0], msgHashHex] });
 				console.log("SIGNED", signedMsg)
 				
