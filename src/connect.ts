@@ -1,11 +1,11 @@
 import Web3 from 'web3';
 import { AbiItem, hexToNumber } from 'web3-utils';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { ApiPromise, Keyring, WsProvider } from "@polkadot/api";
-import {signatureVerify} from '@polkadot/util-crypto'
+import { signatureVerify } from '@polkadot/util-crypto'
+const ethUtil = require('ethereumjs-util')
 
 export const ALITH_PRIVKEY = "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133";
-const testMsg="hello world but a lil bit longer"
+const testMsg = "hello world but a lil bit longer"
 
 type Address = string;
 export async function connectMetaMask(
@@ -72,11 +72,19 @@ export async function connectMetaMask(
 				isConnected = true;
 				networkId = await web3.eth.net.getId();
 				console.log("ok")
-				const signedMsg = await provider.request({ method: 'eth_sign', params: [accountsRead[0], testMsg] });
+				const msgHashHex = ethUtil.bufferToHex(ethUtil.keccak(Buffer.from(testMsg)))
+				const signedMsg = await provider.request({ method: 'eth_sign', params: [accountsRead[0], msgHashHex] });
 				console.log("SIGNED", signedMsg)
-				// const keyring = new Keyring({ type: "ethereum" });
-				// const alith = await keyring.addFromUri(ALITH_PRIVKEY, undefined, "ethereum");
-				console.log('verify',signatureVerify(testMsg,signedMsg,accountsRead[0]))
+				
+				console.log('verify', signatureVerify(testMsg, signedMsg, accountsRead[0]))
+
+				const r = ethUtil.toBuffer(signedMsg.slice(0, 66))
+				const s = ethUtil.toBuffer(`0x${signedMsg.slice(66, 130)}`)
+				const v = ethUtil.bufferToInt(ethUtil.toBuffer(`0x${signedMsg.slice(130, 132)}`))
+				const m = ethUtil.toBuffer(msgHashHex)
+				const pub = ethUtil.ecrecover(m, v, r, s)
+				const adr = `0x${ethUtil.pubToAddress(pub).toString('hex')}`
+				console.log("ADDRESS", adr)
 			} catch (e) {
 				if (e.code !== 4001) {
 					throw new Error(e.message);
