@@ -12,15 +12,16 @@ export async function connectMetaMask(
 	onAccountsChanged: (accounts: Address[]) => void,
 	onNetworkChanged: (networkId: number) => void,
 	toAlpha?: boolean
-) {
+):Promise<{ isConnected:boolean, networkId:number, accounts: string[], web3:Web3|null, provider:any }> {
 	let isConnected: boolean = false
-	let web3: Web3
+	let web3: Web3|null=null
 	let networkId: number = 0
+	let provider: any 
 	let accountsRead: string[] = ["0x0"]
 	if ((window as { [key: string]: any }).ethereum) {
-		console.log('Last updated: 04/27/21');
+		console.log('Last updated: 08/09/21');
 		// const { ethereum } = window as { [key: string]: any };
-		const provider: any = await detectEthereumProvider({ mustBeMetaMask: true });
+		provider = await detectEthereumProvider({ mustBeMetaMask: true });
 		console.log('PROVIDER', provider);
 		if (provider && provider.isMetaMask) {
 			try {
@@ -72,19 +73,19 @@ export async function connectMetaMask(
 				isConnected = true;
 				networkId = await web3.eth.net.getId();
 				console.log("ok")
-				const msgHashHex =ethUtil.bufferToHex(Buffer.from(testMsg)) //ethUtil.bufferToHex(ethUtil.keccak(Buffer.from(testMsg)))
-				const signedMsg = await provider.request({ method: 'eth_sign', params: [accountsRead[0], msgHashHex] });
-				console.log("SIGNED", signedMsg)
+				// const msgHashHex =ethUtil.bufferToHex(Buffer.from(testMsg)) //ethUtil.bufferToHex(ethUtil.keccak(Buffer.from(testMsg)))
+				// const signedMsg = await provider.request({ method: 'eth_sign', params: [accountsRead[0], msgHashHex] });
+				// console.log("SIGNED", signedMsg)
 				
-				console.log('verify', signatureVerify(testMsg, signedMsg, accountsRead[0]))
+				// console.log('verify', signatureVerify(testMsg, signedMsg, accountsRead[0]))
 
-				const r = ethUtil.toBuffer(signedMsg.slice(0, 66))
-				const s = ethUtil.toBuffer(`0x${signedMsg.slice(66, 130)}`)
-				const v = ethUtil.bufferToInt(ethUtil.toBuffer(`0x${signedMsg.slice(130, 132)}`))
-				const m = ethUtil.toBuffer(msgHashHex)
-				const pub = ethUtil.ecrecover(m, v, r, s)
-				const adr = `0x${ethUtil.pubToAddress(pub).toString('hex')}`
-				console.log("ADDRESS", adr)
+				// const r = ethUtil.toBuffer(signedMsg.slice(0, 66))
+				// const s = ethUtil.toBuffer(`0x${signedMsg.slice(66, 130)}`)
+				// const v = ethUtil.bufferToInt(ethUtil.toBuffer(`0x${signedMsg.slice(130, 132)}`))
+				// const m = ethUtil.toBuffer(msgHashHex)
+				// const pub = ethUtil.ecrecover(m, v, r, s)
+				// const adr = `0x${ethUtil.pubToAddress(pub).toString('hex')}`
+				// console.log("ADDRESS", adr)
 			} catch (e) {
 				if (e.code !== 4001) {
 					throw new Error(e.message);
@@ -94,5 +95,5 @@ export async function connectMetaMask(
 			throw new Error('Other ethereum wallet did not support.');
 		}
 	}
-	return { isConnected, networkId, accounts: accountsRead };
+	return { isConnected, networkId, accounts: accountsRead, web3,provider };
 }
