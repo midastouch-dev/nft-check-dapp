@@ -5,7 +5,6 @@ import { connectMetaMask } from "./methods/connect";
 import { signEmail } from "./methods/signVerify";
 import { submitForm } from "./methods/apiCalls";
 
-// TODO tets with other wallets and working address
 function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
@@ -63,7 +62,7 @@ function App() {
     } catch (e) {
       setStatus(e);
     }
-    setStatus("Submited successfully"); // TODO add green and red status
+    setStatus("Submited successfully");
   }
 
   return (
@@ -87,11 +86,11 @@ function App() {
           >
             <small>Connect and Check</small>
           </Button>
-          <div>{connectionStatus}</div>
+          <div style={connectionStatus==="Connected"?{color:"green"}:{color:"red"}}>{connectionStatus}</div>
           <div>Account: {account}</div>
-          <div>
+          {connectionStatus==="Connected"&&<div style={hasNFT?{color:"green"}:{color:"red"}}>
             {hasNFT ? "Owns a MOONBEAM NFT" : "Doesn't Own a MOONBEAM NFT"}
-          </div>
+          </div>}
         </Card>
         {hasNFT ? (
           <Card body>
@@ -124,7 +123,7 @@ function App() {
               <small>Sign And Send</small>
             </Button>
             <div>Signature: {signature}</div>
-            <div>Status: {status}</div>
+            <div style={status==="Submited successfully"?{color:"green"}:{}}>Status: {status}</div>
           </Card>
         ) : null}
       </header>
