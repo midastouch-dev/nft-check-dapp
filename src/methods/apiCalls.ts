@@ -10,7 +10,7 @@ export async function submitForm(
 }> {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-console.log('signature',signature)
+  console.log("signature", signature);
   var raw = JSON.stringify({
     email: email,
     ethAddress: ethAddress,

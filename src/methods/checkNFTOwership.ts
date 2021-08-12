@@ -4,7 +4,6 @@ import { NFT_ABI } from "./NFT_ABI";
 
 const POLKAPET_CONTRACT_ADDRESS = "0x8cb813bf27dc744fc5fb6ba7515504de45d39e08";
 
-
 export async function checkNFTOwnership(web3: Web3, account: string) {
   const contract = new web3.eth.Contract(
     NFT_ABI as AbiItem[],

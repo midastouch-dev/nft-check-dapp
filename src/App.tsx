@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  InputGroup,
-  Button,
-  Card,
-  FormControl,
-} from "react-bootstrap";
+import { InputGroup, Button, Card, FormControl } from "react-bootstrap";
 import logo from "./logo.svg";
 import { checkNFTOwnership } from "./methods/checkNFTOwership";
 // import './App.css';
@@ -14,6 +9,7 @@ import { signEmail } from "./methods/signVerify";
 import GoogleForm from "google-form-send";
 import { submitForm } from "./methods/apiCalls";
 
+// TODO tets with other wallets and working address
 function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
@@ -24,9 +20,6 @@ function App() {
   const [hasNFT, setHasNFT] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<boolean>(false);
   const [signature, setSignature] = React.useState<string>("");
-  const form = new GoogleForm(
-    "https://docs.google.com/forms/d/e/1FAIpQLScHbQWSCWlHXgdswg5W18Hxa-Y0hwLv2_sGYcT5NF6z-jaj8Q"
-  );
 
   async function connect(toAlpha?: boolean) {
     setBusy(true);
@@ -47,12 +40,12 @@ function App() {
     );
     setProvider(provider);
     // TODO : check network id
-    
+
     setHasNFT(
       web3 &&
         (await checkNFTOwnership(
           web3,
-          accounts[0]// "0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
+          accounts[0] // "0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
         ))
         ? true
         : false
@@ -62,14 +55,14 @@ function App() {
   }
   async function associateAndSend() {
     const sig = await signEmail(email, account, provider);
-    console.log("sig",sig)
+    console.log("sig", sig);
     setSignature(sig);
     try {
-      await submitForm(email,account,sig)
-    } catch(e){
-      setStatus(e)
+      await submitForm(email, account, sig);
+    } catch (e) {
+      setStatus(e);
     }
-    setStatus("Submited successfully")// TODO add green and red status
+    setStatus("Submited successfully"); // TODO add green and red status
   }
 
   return (
@@ -77,9 +70,13 @@ function App() {
       <header className="App-header">
         <Card body>
           <Card.Title>
-            Step 1: Connect MetaMask and Check NFT Ownership
+            Step 1: Connect Wallet to Check Moonbeam PolkaPets Ownership
           </Card.Title>
-          <Card.Text>blablabla</Card.Text>
+          <Card.Text>
+            Moonbeam PolkaPet owners are invited to join the Moonbeam Take
+            Flight token event whitelist. Please note Chinese and U.S. citizens
+            and residents are not eligible to participate in this token event.
+          </Card.Text>
           <Button
             variant="warning"
             block
@@ -98,9 +95,14 @@ function App() {
         {hasNFT ? (
           <Card body>
             <Card.Title>
-              Step 2: Associate Email Address with Eth Address
+              Step 2: Register email to join the Moonbeam Take Flight whitelist
             </Card.Title>
-            <Card.Text>blablabla</Card.Text>
+            <Card.Text>
+              The email address you provide must be the same one you will use to
+              register for the Take Flight event. By providing your email, you
+              are subscribing to email notifications from the Moonbeam
+              Foundation about the event.
+            </Card.Text>
             <InputGroup className="mb-3">
               <InputGroup.Text id="basic-addon1">Email</InputGroup.Text>
               <FormControl
@@ -121,7 +123,7 @@ function App() {
               <small>Sign And Send</small>
             </Button>
             <div>Signature: {signature}</div>
-            <div>Status: {status}</div> 
+            <div>Status: {status}</div>
           </Card>
         ) : null}
       </header>
