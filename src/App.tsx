@@ -5,6 +5,9 @@ import { connectMetaMask } from "./methods/connect";
 import { signEmail } from "./methods/signVerify";
 import { submitForm } from "./methods/apiCalls";
 
+import mrLogo from './moonriver-logo.png';
+import fdLogo from './foundation-logo.png';
+
 function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
@@ -68,6 +71,20 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+      <nav className="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div className="navbar-brand">
+          <a className="navbar-item">
+            <img src={mrLogo} alt='Moonriver' />
+          </a>
+
+        </div>
+        <div className="navbar-end">
+          <a className="navbar-item" href="https://moonbeam.foundation" target="_blank" rel="noopener noreferrer">
+            <img src={fdLogo} alt='Moonriver Foundation' />
+          </a>
+        </div>
+      </nav>
+      <section className="section">
         <Card body>
           <Card.Title>
             Step 1: Connect Wallet to Check Moonbeam PolkaPets Ownership
@@ -126,6 +143,7 @@ function App() {
             <div style={status==="Submited successfully"?{color:"green"}:{}}>Status: {status}</div>
           </Card>
         ) : null}
+        </section>
       </header>
     </div>
   );
