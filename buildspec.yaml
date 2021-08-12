@@ -11,7 +11,7 @@ phases:
       # Update CloudFroamtion stack
       - aws cloudformation package --template-file cf-template.yaml --output-template-file packaged.yaml --s3-bucket $ARTIFACTS_BUCKET
 
-      - aws cloudformation deploy --template-file packaged.yaml --stack-name "$AWS_STACKNAME" --s3-bucket $ARTIFACTS_BUCKET --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WebS3BucketName="$WEB_BUCKETNAME" CrowdloanUsersTableName="$USERS_TABLE" CrowdloanUsersContributionsTableName="$CONTRIBUTIONS_TABLE" CrowdloanBackendNodesTableName="$BACKENDNODES_TABLE" CrowdloanFrontendNodesTableName="$FRONTENDNODES_TABLE" VerifierKeyARN="$VERIFIERKEY_ARN" DeployFrontEnd="$DEPLOY_FE" --no-fail-on-empty-changeset
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name "$AWS_STACKNAME" --s3-bucket $ARTIFACTS_BUCKET --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WebS3BucketName="$WEB_BUCKETNAME" --no-fail-on-empty-changeset
 
       - yarn build
 
