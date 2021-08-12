@@ -26,7 +26,7 @@ export async function submitForm(
 
   return new Promise((res, rej) => {
     fetch(
-      "https://khgw8xsa8h.execute-api.us-east-1.amazonaws.com/prod/",
+      "https://cadudtdnx4.execute-api.eu-west-2.amazonaws.com/prod/",
       requestOptions
     )
       .then((response) => response.text())

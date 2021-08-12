@@ -16,16 +16,24 @@ function App() {
   const [status, setStatus] = React.useState<string>("");
   const [network, setNetwork] = React.useState<string>("Moonbase Alpha");
   const [busy, setBusy] = React.useState<boolean>(false);
-  const [isConnected, setConnected] = React.useState<boolean>(false);
+  const [connectionStatus, setConnectionStatus] = React.useState<string>("Not Connected");
   const [hasNFT, setHasNFT] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<boolean>(false);
   const [signature, setSignature] = React.useState<string>("");
 
-  async function connect(toAlpha?: boolean) {
+  function checkNetwork(id:number){
+    if (id!==1){
+      setConnectionStatus("Wrong Network");
+    } else {
+
+    setConnectionStatus("Connected");
+    }
+  }
+
+  async function connect() {
     setBusy(true);
     const {
       networkId,
-      isConnected,
       accounts,
       web3,
       provider,
@@ -34,28 +42,26 @@ function App() {
         setAccount(accounts[0]);
       },
       async (_networkId: number) => {
-        //
-      },
-      toAlpha
+        checkNetwork(_networkId)
+      }
     );
     setProvider(provider);
-    // TODO : check network id
+    checkNetwork(networkId)
 
-    setHasNFT(
+    networkId===1&&setHasNFT(
       web3 &&
         (await checkNFTOwnership(
           web3,
-          accounts[0] // "0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
+          accounts[0]//"0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
         ))
         ? true
         : false
     );
-    setConnected(isConnected);
     setBusy(false);
   }
+
   async function associateAndSend() {
     const sig = await signEmail(email, account, provider);
-    console.log("sig", sig);
     setSignature(sig);
     try {
       await submitForm(email, account, sig);
@@ -86,7 +92,7 @@ function App() {
           >
             <small>Connect and Check</small>
           </Button>
-          <div>{isConnected ? "Connected" : "Not Connected"}</div>
+          <div>{connectionStatus}</div>
           <div>Account: {account}</div>
           <div>
             {hasNFT ? "Owns a MOONBEAM NFT" : "Doesn't Own a MOONBEAM NFT"}
