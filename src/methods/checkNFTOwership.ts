@@ -3,7 +3,7 @@ import { AbiItem } from "web3-utils";
 import { NFT_ABI } from "./NFT_ABI";
 
 const POLKAPET_CONTRACT_ADDRESS = "0x8cb813bf27dc744fc5fb6ba7515504de45d39e08";
-const BLOCK_NUMBER=process.env.BLOCK_NUMBER||"latest"
+const BLOCK_NUMBER = process.env.BLOCK_NUMBER || "latest";
 export async function checkNFTOwnership(web3: Web3, account: string) {
   const contract = new web3.eth.Contract(
     NFT_ABI as AbiItem[],
@@ -12,7 +12,7 @@ export async function checkNFTOwnership(web3: Web3, account: string) {
   const balanceMoonbeam = await new Promise<number>((res) => {
     contract.methods
       .balanceOf(account, 1)
-      .call({},BLOCK_NUMBER)
+      .call({}, BLOCK_NUMBER)
       .then(function (result: any) {
         res(result);
       });
@@ -20,7 +20,7 @@ export async function checkNFTOwnership(web3: Web3, account: string) {
   const balanceValentines = await new Promise<number>((res) => {
     contract.methods
       .balanceOf(account, 8)
-      .call({},BLOCK_NUMBER)
+      .call({}, BLOCK_NUMBER)
       .then(function (result: any) {
         res(result);
       });

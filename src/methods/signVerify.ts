@@ -13,9 +13,7 @@ export async function signEmail(
   address: string,
   provider: any
 ): Promise<string> {
-  console.log("signing message " + msg);
   const msgHashHex = ethUtil.bufferToHex(Buffer.from(completeWithZeros(msg)));
-  console.log("msgHashHex", msgHashHex);
   return await provider.request({
     method: "eth_sign",
     params: [address, msgHashHex],
