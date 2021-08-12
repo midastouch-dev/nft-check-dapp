@@ -1,0 +1,25 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - npm install -g yarn
+      - yarn
+  build:
+    commands:
+      # Update CloudFroamtion stack
+      - aws cloudformation package --template-file cf-template.yaml --output-template-file packaged.yaml --s3-bucket $ARTIFACTS_BUCKET
+
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name "$AWS_STACKNAME" --s3-bucket $ARTIFACTS_BUCKET --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WebS3BucketName="$WEB_BUCKETNAME" CrowdloanUsersTableName="$USERS_TABLE" CrowdloanUsersContributionsTableName="$CONTRIBUTIONS_TABLE" CrowdloanBackendNodesTableName="$BACKENDNODES_TABLE" CrowdloanFrontendNodesTableName="$FRONTENDNODES_TABLE" VerifierKeyARN="$VERIFIERKEY_ARN" DeployFrontEnd="$DEPLOY_FE" --no-fail-on-empty-changeset
+
+      - yarn build
+
+      # delete map files
+      - find . -type f -name '*.map' -delete
+
+      - aws s3 cp --recursive --acl public-read ./build s3://$WEB_BUCKETNAME/ 
+
+      # set the cache-control headers for index.html to prevent
+      # browser caching
+      - aws s3 cp --acl public-read --cache-control="max-age=0, no-cache, no-store, must-revalidate" ./build/index.html s3://$WEB_BUCKETNAME/
