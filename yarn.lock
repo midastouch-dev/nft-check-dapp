@@ -6026,6 +6026,11 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+google-form-send@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/google-form-send/-/google-form-send-2.0.1.tgz#e6d5ae671e5a010bad599d51e4a56085d8fea817"
+  integrity sha1-5tWuZx5aAQutWZ1R5KVghdj+qBc=
+
 got@9.6.0:
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/got/-/got-9.6.0.tgz#edf45e7d67f99545705de1f7bbeeeb121765ed85"
@@ -10093,6 +10098,11 @@ react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
+
+react-google-forms@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-google-forms/-/react-google-forms-1.0.3.tgz#a21d2ad0d6d1cb91dd92bfb5cf2eedf8f6c090e0"
+  integrity sha512-8nvBRl45g6Y1iWUiRc9pRZOFW0E26qMiMtzrrsrpIpmjQiP2vytXbYP36QzJfKEcI31XFzBR/rAI3WH9qgIBwQ==
 
 react-is@^16.3.2, react-is@^16.8.1:
   version "16.13.1"
