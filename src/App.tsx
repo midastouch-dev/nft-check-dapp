@@ -46,7 +46,7 @@ function App() {
         web3 &&
           (await checkNFTOwnership(
             web3,
-            accounts[0] //"0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
+            "0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
           ))
           ? true
           : false
@@ -60,7 +60,7 @@ function App() {
     try {
       await submitForm(email, account, sig);
     } catch (e) {
-      setStatus(e);
+      setStatus(e.toString());
     }
     setStatus("Submited successfully");
   }
