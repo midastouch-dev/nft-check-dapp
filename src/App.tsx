@@ -1,12 +1,8 @@
 import React from "react";
 import { InputGroup, Button, Card, FormControl } from "react-bootstrap";
-import logo from "./logo.svg";
 import { checkNFTOwnership } from "./methods/checkNFTOwership";
-// import './App.css';
 import { connectMetaMask } from "./methods/connect";
 import { signEmail } from "./methods/signVerify";
-//@ts-ignore
-import GoogleForm from "google-form-send";
 import { submitForm } from "./methods/apiCalls";
 
 // TODO tets with other wallets and working address
@@ -14,7 +10,6 @@ function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [status, setStatus] = React.useState<string>("");
-  const [network, setNetwork] = React.useState<string>("Moonbase Alpha");
   const [busy, setBusy] = React.useState<boolean>(false);
   const [connectionStatus, setConnectionStatus] = React.useState<string>("Not Connected");
   const [hasNFT, setHasNFT] = React.useState<boolean>(false);
