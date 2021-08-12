@@ -1,20 +1,14 @@
 import React from "react";
 import { InputGroup, Button, Card, FormControl } from "react-bootstrap";
-import logo from "./logo.svg";
 import { checkNFTOwnership } from "./methods/checkNFTOwership";
-// import './App.css';
 import { connectMetaMask } from "./methods/connect";
 import { signEmail } from "./methods/signVerify";
-//@ts-ignore
-import GoogleForm from "google-form-send";
 import { submitForm } from "./methods/apiCalls";
 
-// TODO tets with other wallets and working address
 function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [status, setStatus] = React.useState<string>("");
-  const [network, setNetwork] = React.useState<string>("Moonbase Alpha");
   const [busy, setBusy] = React.useState<boolean>(false);
   const [connectionStatus, setConnectionStatus] = React.useState<string>("Not Connected");
   const [hasNFT, setHasNFT] = React.useState<boolean>(false);
@@ -68,7 +62,7 @@ function App() {
     } catch (e) {
       setStatus(e);
     }
-    setStatus("Submited successfully"); // TODO add green and red status
+    setStatus("Submited successfully");
   }
 
   return (
@@ -92,11 +86,11 @@ function App() {
           >
             <small>Connect and Check</small>
           </Button>
-          <div>{connectionStatus}</div>
+          <div style={connectionStatus==="Connected"?{color:"green"}:{color:"red"}}>{connectionStatus}</div>
           <div>Account: {account}</div>
-          <div>
+          {connectionStatus==="Connected"&&<div style={hasNFT?{color:"green"}:{color:"red"}}>
             {hasNFT ? "Owns a MOONBEAM NFT" : "Doesn't Own a MOONBEAM NFT"}
-          </div>
+          </div>}
         </Card>
         {hasNFT ? (
           <Card body>
@@ -129,7 +123,7 @@ function App() {
               <small>Sign And Send</small>
             </Button>
             <div>Signature: {signature}</div>
-            <div>Status: {status}</div>
+            <div style={status==="Submited successfully"?{color:"green"}:{}}>Status: {status}</div>
           </Card>
         ) : null}
       </header>
