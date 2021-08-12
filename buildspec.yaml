@@ -18,7 +18,7 @@ phases:
       # delete map files
       - find . -type f -name '*.map' -delete
 
-      - aws s3 cp --recursive --acl public-read ./build s3://$WEB_BUCKETNAME/ 
+      - aws s3 cp --recursive --acl public-read ./build s3://$WEB_BUCKETNAME/
 
       # set the cache-control headers for index.html to prevent
       # browser caching

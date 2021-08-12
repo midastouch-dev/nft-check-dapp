@@ -1,6 +1,14 @@
+@font-face {
+  font-family: "OpenSans";
+  src: url(fonts/OpenSans-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "VarelaRound";
+  src: url(fonts/VarelaRound-Regular.ttf) format("truetype");
+}
 
 nav.navbar.is-dark {
-  background-color: #242A2E;
+  background-color: #242a2e;
 }
 nav.navbar {
   padding-top: 10px;
@@ -10,9 +18,14 @@ a.navbar-item img {
   max-height: 2.2rem;
 }
 
-@media screen and (min-width: 1500px){
+@media screen and (min-width: 1500px) {
   nav.navbar {
-      padding-right: 9vw;
-      padding-left: 9vw;
+    padding-right: 9vw;
+    padding-left: 9vw;
   }
+}
+
+
+section.hero.is-info {
+  background-color: #53CBC9;
 }

@@ -1,25 +1,23 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Description: Pipeline - Crowdloan attestation
 
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
-    - Label:
-        default: Build parameters
-      Parameters:
-      - S3BucketName
-      - DestinationStackName
-      - DestinationRepositoryName
-      - DestinationRepositoryBranch
-    - Label:
-        default: Target stack parameters
-      Parameters:
-      - WebS3BucketName
-
+      - Label:
+          default: Build parameters
+        Parameters:
+          - S3BucketName
+          - DestinationStackName
+          - DestinationRepositoryName
+          - DestinationRepositoryBranch
+      - Label:
+          default: Target stack parameters
+        Parameters:
+          - WebS3BucketName
 
 Parameters:
-
   S3BucketName:
     Type: String
     Description: S3 bucket for build artifacts and target repository storage
@@ -38,22 +36,22 @@ Parameters:
 
   WebS3BucketName:
     Type: String
-    Description: The S3 bucket in which the attestation web application code is stored.
+    Description:
+      The S3 bucket in which the attestation web application code is stored.
       Bucket names are globally unique, so you must change this.
-
 
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref S3BucketName
-      
-  CodePipelineServiceRole: 
+
+  CodePipelineServiceRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Join
-        - ''
-        - - 'CodePipelineRole-'
+        - ""
+        - - "CodePipelineRole-"
           - !Ref AWS::StackName
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -62,117 +60,117 @@ Resources:
             Principal:
               Service:
                 - codepipeline.amazonaws.com
-            Action: 'sts:AssumeRole'
+            Action: "sts:AssumeRole"
       Path: /
       Policies:
         - PolicyName: !Join
-            - ''
-            - - 'CodePipelineRolePolicy-'
+            - ""
+            - - "CodePipelineRolePolicy-"
               - !Ref AWS::StackName
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Action: 
-                - codebuild:CreateReportGroup
-                - codebuild:CreateReport
-                - codebuild:UpdateReport
-                - codebuild:BatchPutTestCases
+              - Action:
+                  - codebuild:CreateReportGroup
+                  - codebuild:CreateReport
+                  - codebuild:UpdateReport
+                  - codebuild:BatchPutTestCases
                 Effect: Allow
-                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/*'
+                Resource: !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/*"
               - Action:
                   - codebuild:BatchGetBuilds
                   - codebuild:StartBuild
-                Resource: !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/*'
+                Resource: !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/*"
                 Effect: Allow
-              - Action: 
-                - s3:PutObject
-                - s3:GetObject
+              - Action:
+                  - s3:PutObject
+                  - s3:GetObject
                 Effect: Allow
                 Resource: !Join
-                  - ''
-                  - - 'arn:aws:s3:::'
+                  - ""
+                  - - "arn:aws:s3:::"
                     - !Ref S3BucketName
-                    - '/*'
+                    - "/*"
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Join
-        - ''
-        - - 'CodeBuildRole'
+        - ""
+        - - "CodeBuildRole"
           - !Ref AWS::StackName
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           Effect: Allow
           Principal:
-            Service: 
+            Service:
               - codebuild.amazonaws.com
           Action: sts:AssumeRole
-      Path: '/'
+      Path: "/"
       Policies:
-      - PolicyName: !Join
-          - ''
-          - - 'CodeBuildRolePolicy-'
-            - !Ref AWS::StackName
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-          - Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            Effect: Allow
-            Resource: arn:aws:logs:*:*:*
-          - Action:
-            - s3:CreateBucket
-            - s3:PutBucketPolicy
-            Effect: Allow
-            Resource: '*'
-          - Action:
-            - s3:PutObject
-            - s3:PutObjectAcl
-            - s3:DeleteObject
-            - s3:GetObject
-            - s3:GetObjectAcl
-            - s3:GetObjectAcl
-            - s3:GetBucketPolicy
-            - s3:GetBucketPolicyStatus
-            - s3:PutBucketPolicy
-            - s3:DeleteBucket
-            - s3:DeleteBucketPolicy
-            Effect: Allow
-            Resource:
-              - !Join
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref S3BucketName
-                  - '/*'
-              - !Join
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref WebS3BucketName
-                  - '/*'
-          - Action:
-            - cloudformation:DescribeStacks
-            - cloudformation:GetTemplateSummary
-            - cloudformation:CreateChangeSet
-            - cloudformation:ExecuteChangeSet
-            - cloudformation:DescribeChangeSet
-            Effect: Allow
-            Resource:
-              - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*"
-              - !Join
-                  - ''
-                  - - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/'
-                    - !Ref DestinationStackName
-                    - '/*'
-              - !Sub "arn:aws:cloudformation:${AWS::Region}:aws:transform/*"
-          - Action:
-              - 'cloudfront:*'
-              - 'iam:*'
-            Resource: '*'
-            Effect: Allow
+        - PolicyName: !Join
+            - ""
+            - - "CodeBuildRolePolicy-"
+              - !Ref AWS::StackName
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource: arn:aws:logs:*:*:*
+              - Action:
+                  - s3:CreateBucket
+                  - s3:PutBucketPolicy
+                Effect: Allow
+                Resource: "*"
+              - Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:DeleteObject
+                  - s3:GetObject
+                  - s3:GetObjectAcl
+                  - s3:GetObjectAcl
+                  - s3:GetBucketPolicy
+                  - s3:GetBucketPolicyStatus
+                  - s3:PutBucketPolicy
+                  - s3:DeleteBucket
+                  - s3:DeleteBucketPolicy
+                Effect: Allow
+                Resource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:s3:::"
+                      - !Ref S3BucketName
+                      - "/*"
+                  - !Join
+                    - ""
+                    - - "arn:aws:s3:::"
+                      - !Ref WebS3BucketName
+                      - "/*"
+              - Action:
+                  - cloudformation:DescribeStacks
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DescribeChangeSet
+                Effect: Allow
+                Resource:
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*"
+                  - !Join
+                    - ""
+                    - - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/"
+                      - !Ref DestinationStackName
+                      - "/*"
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:aws:transform/*"
+              - Action:
+                  - "cloudfront:*"
+                  - "iam:*"
+                Resource: "*"
+                Effect: Allow
 
   GithubWebhook:
     Type: AWS::CodePipeline::Webhook
@@ -181,24 +179,23 @@ Resources:
       AuthenticationConfiguration:
         SecretToken: "{{resolve:secretsmanager:webhook-nft-checker:SecretString:token}}"
       Filters:
-        - 
-          JsonPath: "$.ref"
+        - JsonPath: "$.ref"
           MatchEquals: refs/heads/{Branch}
       TargetPipeline: !Ref CodePipelineProject
       TargetAction: Source
       Name: !Join
-        - ''
-        - - 'GithubWebhook-'
+        - ""
+        - - "GithubWebhook-"
           - !Ref AWS::StackName
       TargetPipelineVersion: !GetAtt CodePipelineProject.Version
       RegisterWithThirdParty: true
-      
-  CodeBuildProject: 
+
+  CodeBuildProject:
     Type: "AWS::CodeBuild::Project"
-    Properties: 
-      Artifacts: 
+    Properties:
+      Artifacts:
         Type: CODEPIPELINE
-      Environment: 
+      Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: "aws/codebuild/standard:5.0"
         Type: LINUX_CONTAINER
@@ -210,19 +207,19 @@ Resources:
           - Name: WEB_BUCKETNAME
             Value: !Ref WebS3BucketName
       Name: !Join
-        - ''
-        - - 'CodeBuildProject-'
+        - ""
+        - - "CodeBuildProject-"
           - !Ref AWS::StackName
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
-      Source: 
+      Source:
         Type: CODEPIPELINE
-  
+
   CodePipelineProject:
-    Type: AWS::CodePipeline::Pipeline 
-    Properties: 
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
-      ArtifactStore: 
-        Type: S3 
+      ArtifactStore:
+        Type: S3
         Location: !Ref S3BucketName
       Stages:
         - Name: Source
@@ -240,8 +237,8 @@ Resources:
                 OAuthToken: "{{resolve:secretsmanager:github-account-oauth-token:SecretString:token}}"
                 PollForSourceChanges: False
               RunOrder: 1
-              OutputArtifacts: 
-                - Name: SourceArtifact 
+              OutputArtifacts:
+                - Name: SourceArtifact
         - Name: BuildAndDeploy
           Actions:
             - Name: BuildAndDeploy
@@ -249,7 +246,7 @@ Resources:
                 Category: Build
                 Owner: AWS
                 Provider: CodeBuild
-                Version: '1'
+                Version: "1"
               RunOrder: 1
               Configuration:
                 ProjectName: !Ref CodeBuildProject

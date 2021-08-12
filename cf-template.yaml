@@ -1,16 +1,17 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
 
 Description: NFT checker dapp
 
 Parameters:
   WebS3BucketName:
     Type: String
-    Description: The S3 bucket in which the crowdloan web application code is stored.
+    Description:
+      The S3 bucket in which the crowdloan web application code is stored.
       Bucket names are globally unique, so you must change this.
 
 Conditions:
-  InUSEastOne: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  InUSEastOne: !Equals [!Ref "AWS::Region", "us-east-1"]
 
 Resources:
   WebSiteS3Bucket:
@@ -19,14 +20,14 @@ Resources:
       BucketName: !Ref WebS3BucketName
 
   WebSiteS3BucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
+    Type: "AWS::S3::BucketPolicy"
     Properties:
       Bucket: !Ref WebSiteS3Bucket
       PolicyDocument:
         Statement:
-          - Action: 's3:GetObject'
+          - Action: "s3:GetObject"
             Effect: Allow
-            Resource: !Sub 'arn:aws:s3:::${WebSiteS3Bucket}/*'
+            Resource: !Sub "arn:aws:s3:::${WebSiteS3Bucket}/*"
             Principal:
               AWS: !Sub >-
                 arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity
@@ -39,29 +40,40 @@ Resources:
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 200
-            ResponsePagePath: '/index.html'
+            ResponsePagePath: "/index.html"
         DefaultCacheBehavior:
           ForwardedValues:
             QueryString: true
-          TargetOriginId: 'website-s3-bucket'
+          TargetOriginId: "website-s3-bucket"
           ViewerProtocolPolicy: redirect-to-https
         DefaultRootObject: index.html
         Enabled: true
-        Comment: !Sub '${AWS::StackName} distribution'
+        Comment: !Sub "${AWS::StackName} distribution"
         Origins:
-          - Id: 'website-s3-bucket'
-            DomainName: !If ['InUSEastOne',
-              !Join ['', [!Ref WebS3BucketName, '.s3.amazonaws.com']],
-              !Join ['', [!Ref WebS3BucketName, '.s3-', !Ref 'AWS::Region', '.amazonaws.com']]]
+          - Id: "website-s3-bucket"
+            DomainName:
+              !If [
+                "InUSEastOne",
+                !Join ["", [!Ref WebS3BucketName, ".s3.amazonaws.com"]],
+                !Join [
+                  "",
+                  [
+                    !Ref WebS3BucketName,
+                    ".s3-",
+                    !Ref "AWS::Region",
+                    ".amazonaws.com",
+                  ],
+                ],
+              ]
             S3OriginConfig:
-             OriginAccessIdentity: !Sub >-
-               origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+              OriginAccessIdentity: !Sub >-
+                origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
 
   CloudFrontOriginAccessIdentity:
-    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
     Properties:
       CloudFrontOriginAccessIdentityConfig:
-        Comment: !Ref 'AWS::StackName'
+        Comment: !Ref "AWS::StackName"
 
 Outputs:
   CFDistributionId:
