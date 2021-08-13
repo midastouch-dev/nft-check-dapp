@@ -55,14 +55,18 @@ function App() {
   }
 
   async function associateAndSend() {
+    setBusy(true)
+    setStatus("Signing...")
     const sig = await signEmail(email, account, provider);
     setSignature(sig);
+    setStatus("Sending...")
     try {
       console.log(await submitForm(email, account, sig));
       setStatus("Submited successfully");
     } catch (e) {
       setStatus(e.toString());
     }
+    setBusy(false)
   }
 
   return (
