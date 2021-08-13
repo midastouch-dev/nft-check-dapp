@@ -1,6 +1,6 @@
 import React from "react";
 import { InputGroup, Button, Card, FormControl, Container } from "react-bootstrap";
-import { checkNFTOwnership } from "./methods/checkNFTOwership";
+import { BLOCK_NUMBER, checkNFTOwnership } from "./methods/checkNFTOwership";
 import { connectMetaMask } from "./methods/connect";
 import { signEmail } from "./methods/signVerify";
 import { submitForm } from "./methods/apiCalls";
@@ -9,8 +9,6 @@ import mrLogo from "./moonriver-logo.png";
 import fdLogo from "./foundation-logo.png";
 
 require("dotenv").config();
-
-const BLOCK_NUMBER = process.env.BLOCK_NUMBER || "latest";
 
 function App() {
   const [account, setAccount] = React.useState<string>("");
@@ -147,7 +145,7 @@ function App() {
                   : { color: "red", paddingTop:"1em"  }
               }
             >
-              {connectionStatus}
+              Connection Status: {connectionStatus}
             </div>
           </Card>
           {hasNFT ? (
