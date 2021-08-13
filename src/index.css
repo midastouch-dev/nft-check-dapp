@@ -7,6 +7,16 @@
   src: url(fonts/VarelaRound-Regular.ttf) format("truetype");
 }
 
+body {
+  font-family: 'OpenSans', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.card-title {
+  font-family: 'VarelaRound', sans-serif !important;
+}
+
 nav.navbar.is-dark {
   background-color: #242a2e;
 }
@@ -28,4 +38,24 @@ a.navbar-item img {
 
 section.hero.is-info {
   background-color: #53CBC9;
+}
+
+div.card {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-radius: 0 !important;
+}
+
+button.btn.btn-info,
+a.btn.btn-info {
+    background-color: #53CBC9;
+}
+button.btn.btn-info:hover,
+a.btn.btn-info:hover {
+    background-color: #2ea7a5;
+}
+button.btn.btn-info[disabled],
+a.btn.is-info[disabled] {
+    background-color: #53CBC9;
 }
