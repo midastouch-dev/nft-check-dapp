@@ -46,7 +46,7 @@ function App() {
         web3 &&
           (await checkNFTOwnership(
             web3,
-            accounts[0]//"0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
+            accounts[0] //"0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
           ))
           ? true
           : false
@@ -55,14 +55,25 @@ function App() {
   }
 
   async function associateAndSend() {
+    setBusy(true);
+    setStatus("Signing...");
     const sig = await signEmail(email, account, provider);
     setSignature(sig);
+    setStatus("Sending...");
     try {
-      await submitForm(email, account, sig);
-      setStatus("Submited successfully");
+      const resp = await submitForm(email, account, sig);
+      console.log(resp);
+      //@ts-ignore
+      if (resp.message) {
+        //@ts-ignore
+        setStatus(resp.message);
+      } else {
+        setStatus("Submited successfully");
+      }
     } catch (e) {
       setStatus(e.toString());
     }
+    setBusy(false);
   }
 
   return (
@@ -91,6 +102,9 @@ function App() {
         </nav>
 
         <Container>
+          <h1 className="title" style={{marginTop: 20}}>
+            Moonbeam Token Event Polkapet Whitelist
+          </h1>
           <Card body>
             <Card.Title>
               Step 1: Connect MetaMask to Check Moonbeam PolkaPets Ownership
@@ -161,7 +175,7 @@ function App() {
                   <div>Signature: {signature}</div>
                   <div
                     style={
-                      status === "Submited successfully" ? { color: "green" } : {}
+                      status === "Submited successfully" ? { color: "green" } : { color: "orange" }
                     }
                   >
                     Status: {status}
@@ -176,6 +190,7 @@ function App() {
             </Card>
           ) : null}
         </Container>
+
       </header>
     </div>
   );

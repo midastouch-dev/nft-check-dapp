@@ -2,12 +2,15 @@ export async function submitForm(
   email: string,
   ethAddress: string,
   signature: string
-): Promise<{
-  ethAddress: string;
-  email: string;
-  signature: string;
-  timestamp: string;
-}> {
+): Promise<
+  | {
+      ethAddress: string;
+      email: string;
+      signature: string;
+      timestamp: string;
+    }
+  | { message: string }
+> {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   console.log("signature", signature);
