@@ -8,6 +8,10 @@ import { submitForm } from "./methods/apiCalls";
 import mrLogo from "./moonriver-logo.png";
 import fdLogo from "./foundation-logo.png";
 
+require("dotenv").config();
+
+const BLOCK_NUMBER = process.env.BLOCK_NUMBER || "latest";
+
 function App() {
   const [account, setAccount] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
@@ -114,15 +118,18 @@ function App() {
               Please note Chinese and U.S. citizens and residents are <u>not eligible</u> to participate in this token event.
               For additional information on eligibility please see <a href="https://moonbeam.foundation/take-flight/#eligibility" target="_blank" rel="noopener">Take Flight eligibility</a>.
             </Card.Text>
+            <Card.Text>
+              NB: You need to own the NFT by block: {BLOCK_NUMBER}
+            </Card.Text>
 
             {connectionStatus === "Connected" && 
               <div>Account: {account} - <span style={hasNFT ? { color: "green" } : { color: "red" }}>
-                  {hasNFT ? "Owns a MOONBEAM NFT" : "This account doesn't own a MOONBEAM NFT"}
+                  {hasNFT ? "Owns a MOONBEAM NFT" : "No MOONBEAM NFT has been detected, you can’t continue"}
                 </span>
               </div>
             }
 
-            {connectionStatus === "Not Connected" && 
+            {connectionStatus !== "Connected" && 
               <Button
                 variant="info"
                 block
@@ -133,6 +140,15 @@ function App() {
                 <small>Connect and Check</small>
               </Button>
             }
+            <div
+              style={
+                connectionStatus === "Connected"
+                  ? { color: "green", paddingTop:"1em" }
+                  : { color: "red", paddingTop:"1em"  }
+              }
+            >
+              {connectionStatus}
+            </div>
           </Card>
           {hasNFT ? (
             <Card body>
