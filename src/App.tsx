@@ -46,7 +46,7 @@ function App() {
         web3 &&
           (await checkNFTOwnership(
             web3,
-            accounts[0]//"0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
+            "0x3e5e1a443feb2e5e7f611c4f2426c275811a46f5"
           ))
           ? true
           : false
@@ -58,7 +58,7 @@ function App() {
     const sig = await signEmail(email, account, provider);
     setSignature(sig);
     try {
-      await submitForm(email, account, sig);
+      console.log(await submitForm(email, account, sig));
       setStatus("Submited successfully");
     } catch (e) {
       setStatus(e.toString());
@@ -91,7 +91,7 @@ function App() {
         </nav>
         <section className="section">
           <Card body>
-            <Card.Title>
+            <Card.Title style={{padding:"0.5em 0 0.5em 0"}}>
               Step 1: Connect Wallet to Check Moonbeam PolkaPets Ownership
             </Card.Title>
             <Card.Text>
@@ -106,6 +106,7 @@ function App() {
               size="sm"
               disabled={busy}
               onClick={() => connect()}
+              style={{margin:"1em 0 1em 0"}}
             >
               <small>Connect and Check</small>
             </Button>
@@ -127,7 +128,7 @@ function App() {
           </Card>
           {hasNFT ? (
             <Card body>
-              <Card.Title>
+              <Card.Title style={{padding:"0.5em 0 0.5em 0"}}>
                 Step 2: Register email to join the Moonbeam Take Flight
                 whitelist
               </Card.Title>
@@ -153,6 +154,7 @@ function App() {
                 size="sm"
                 disabled={busy}
                 onClick={() => associateAndSend()}
+                style={{margin:"1em 0 1em 0"}}
               >
                 <small>Sign And Send</small>
               </Button>
