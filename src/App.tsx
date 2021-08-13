@@ -94,7 +94,11 @@ function App() {
           </div>
         </nav>
         <section className="section">
-          <Card body>
+      <div className="container is-max-widescreen">
+      <h1 className="title">
+      Moonbeam Token Event Polkapet Whitelist
+        </h1>
+        {status !== "Submited successfully"&&<Card body>
             <Card.Title style={{padding:"0.5em 0 0.5em 0"}}>
               Step 1: Connect Wallet to Check Moonbeam PolkaPets Ownership
             </Card.Title>
@@ -129,8 +133,8 @@ function App() {
                 {hasNFT ? "Owns a MOONBEAM NFT" : "Doesn't Own a MOONBEAM NFT"}
               </div>
             )}
-          </Card>
-          {hasNFT ? (
+          </Card>}
+          {hasNFT&&status !== "Submited successfully" && (
             <Card body>
               <Card.Title style={{padding:"0.5em 0 0.5em 0"}}>
                 Step 2: Register email to join the Moonbeam Take Flight
@@ -171,7 +175,23 @@ function App() {
                 Status: {status}
               </div>
             </Card>
-          ) : null}
+          )}
+          {status === "Submited successfully" && (
+            <Card body>
+              <Card.Title style={{padding:"0.5em 0 0.5em 0"}}>
+                Success!
+              </Card.Title>
+              <div>Signature: {signature}</div>
+              <div
+                style={
+                  status === "Submited successfully" ? { color: "green" } : {}
+                }
+              >
+                Status: {status}
+              </div>
+            </Card>
+          )}
+          </div>
         </section>
       </header>
     </div>
